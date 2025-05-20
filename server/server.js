@@ -33,10 +33,10 @@ mongoose.connection.on('error', (err) => {
 // === API Routes ===
 app.use('/api/todos', todoRoutes);
 
-// === Root Route ===
-app.get('/', (req, res) => {
-  res.send('✅ Backend API is running. Use /api/todos to interact.');
-});
+// // === Root Route ===
+// app.get('/', (req, res) => {
+//   res.send('✅ Backend API is running. Use /api/todos to interact.');
+// });
 
 // === Serve Frontend (Production Only) ===
 const clientPath = path.join(__dirname, 'client/build');
