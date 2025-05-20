@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 
-const API = 'http://localhost:3000/api/todos';
+const API = process.env.REACT_APP_API_URL || '/api/todos';
 
 function App() {
   const [todos, setTodos] = useState([]);
