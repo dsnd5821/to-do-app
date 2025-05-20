@@ -10,11 +10,13 @@ app.use(express.json());
 app.use('/api/todos', todoRoutes);
 
 beforeAll(async () => {
-  await mongoose.connect(process.env.MONGO_URI, {
+  const mongoUri = process.env.MONGO_URI || "mongodb://localhost:27017/test-todo";
+  await mongoose.connect(mongoUri, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
   });
 });
+
 
 afterAll(async () => {
   await mongoose.connection.db.dropDatabase();
