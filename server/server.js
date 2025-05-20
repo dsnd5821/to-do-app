@@ -39,7 +39,7 @@ app.get('/', (req, res) => {
 });
 
 // === Serve Frontend (Production Only) ===
-const clientPath = path.join(__dirname, '../client/build');
+const clientPath = path.join(__dirname, 'client/build');
 if (process.env.NODE_ENV === 'production' && fs.existsSync(clientPath)) {
   app.use(express.static(clientPath));
   app.get('*', (req, res) => {
