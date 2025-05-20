@@ -1,23 +1,25 @@
 version: '3.8'
+
 services:
   mongo:
-    image: mongo
-    container_name: mongo
+    image: mongo:latest
+    container_name: mongodb
+    restart: always
     ports:
       - "27017:27017"
     volumes:
       - mongo-data:/data/db
 
-  todo-app:
-    build: .
+  app:
+    image: desmond0905/todo-app
     container_name: todo-app
+    restart: always
     ports:
       - "3000:3000"
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/todo-db
     depends_on:
       - mongo
-    environment:
-      - MONGO_URI=mongodb://mongo:27017/todoapp
-      - NODE_ENV=production
 
 volumes:
   mongo-data:
