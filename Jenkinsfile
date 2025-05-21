@@ -83,14 +83,16 @@ pipeline {
 
         stage('Deploy to EC2') {
             steps {
-                sshagent(credentials: [EC2_SSH_CREDENTIALS]) {
-                    bat """
-                    ssh -o StrictHostKeyChecking=no ubuntu@${EC2_IP} ^
-                    "docker pull desmond0905/todo-app && ^
-                     docker stop todo-app || true && ^
-                     docker rm todo-app || true && ^
-                     docker run -d --env-file .env -p 80:3000 --name todo-app desmond0905/todo-app"
-                    """
+                script {
+                    sshagent(credentials: [EC2_SSH_CREDENTIALS]) {
+                        bat """
+                        ssh -o StrictHostKeyChecking=no ubuntu@${env.EC2_IP} ^
+                        "docker pull desmond0905/todo-app && ^
+                         docker stop todo-app || true && ^
+                         docker rm todo-app || true && ^
+                         docker run -d --env-file .env -p 80:3000 --name todo-app desmond0905/todo-app"
+                        """
+                    }
                 }
             }
         }
