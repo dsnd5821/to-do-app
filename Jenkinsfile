@@ -80,6 +80,17 @@ pipeline {
             }
         }
 
+        stage('Test SSH Connection') {
+            steps {
+                script {
+                    sshagent(credentials: ['todoapp.pem']) {
+                        sh 'ssh -o StrictHostKeyChecking=no ubuntu@${env.EC2_IP} "echo Connection successful!"'
+                    }
+                }
+            }
+        }
+
+
         stage('Deploy to EC2') {
             steps {
                 script {
