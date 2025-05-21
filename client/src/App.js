@@ -40,7 +40,7 @@ function App() {
 
   return (
     <div className="app-container">
-      <h1>📝 My To-Do List</h1>
+      <h1>📝 My To-Do List test</h1>
       <div className="input-container">
         <input value={text} onChange={e => setText(e.target.value)} placeholder="Enter a task..." />
         <button onClick={addTodo}>Add</button>
