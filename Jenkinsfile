@@ -83,7 +83,7 @@ pipeline {
         stage('Deploy to EC2') {
             steps {
                 script {
-                    sshagent(credentials: ['EC2_SSH_CREDENTIALS']) {
+                    sshagent(credentials: ['todoapp.pem']) {
                         bat """
                         ssh -o StrictHostKeyChecking=no ubuntu@${env.EC2_IP} ^
                         "docker pull desmond0905/todo-app && ^
