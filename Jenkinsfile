@@ -3,7 +3,8 @@ pipeline {
     environment {
         DOCKER_IMAGE = "desmond0905/todo-app"
         DOCKER_CREDENTIALS_ID = "dockerhub-creds"
-        AZURE_CREDENTIALS_ID = "azure-service-principal"
+        EC2_SSH_CREDENTIALS = "todoapp.pem"
+        EC2_IP = "184.72.203.166"
     }
     stages {
         stage('Clean Workspace') {
@@ -77,6 +78,22 @@ pipeline {
         stage('Compose Up') {
             steps {
                 bat 'docker compose -f docker-compose.yml up -d'
+            }
+        }
+
+        stage('Deploy to EC2') {
+            steps {
+                sshagent(credentials: [EC2_SSH_CREDENTIALS]) {
+                    bat """
+                    ssh -o StrictHostKeyChecking=no ubuntu@${EC2_IP} << EOF
+                        sudo systemctl start mongodb || docker start mongodb
+                        docker pull desmond0905/todo-app
+                        docker stop todo-app || true
+                        docker rm todo-app || true
+                        docker run -d --env-file .env -p 80:3000 --name todo-app desmond0905/todo-app
+                    EOF
+                    """
+                }
             }
         }
 
