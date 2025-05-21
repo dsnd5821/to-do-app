@@ -81,19 +81,18 @@ pipeline {
         }
 
         stage('Deploy to EC2') {
-            steps {
-                script {
-                    bat '''
-                    ssh -v -i "C:\Users\123de\Downloads\todoapp.pem" ubuntu@${env.EC2_IP}
-                    docker pull desmond0905/todo-app && 
-                    docker stop todo-app || true && 
-                    docker rm todo-app || true && 
-                    docker run -d --env-file .env -p 80:3000 --name todo-app desmond0905/todo-app"
-                    '''
-                }
+          steps {
+            script {
+              bat """
+                ssh -v -i "C:/Users/123de/Downloads/todoapp.pem" -o StrictHostKeyChecking=no ubuntu@${env.EC2_IP} ^
+                  "docker pull ${env.DOCKER_IMAGE}:latest && ^
+                   docker stop todo-app || true && ^
+                   docker rm todo-app || true && ^
+                   docker run -d --env-file .env -p 80:3000 --name todo-app ${env.DOCKER_IMAGE}:latest"
+              """
             }
+          }
         }
-
 
     }
 
