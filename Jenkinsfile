@@ -84,7 +84,7 @@ pipeline {
             steps {
                 script {
                     sshagent(credentials: ['todoapp.pem']) {
-                        bat """
+                        sh """
                         ssh -o StrictHostKeyChecking=no ubuntu@${env.EC2_IP} ^
                         "docker pull desmond0905/todo-app && ^
                          docker stop todo-app || true && ^
