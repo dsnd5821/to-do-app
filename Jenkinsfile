@@ -3,7 +3,6 @@ pipeline {
     environment {
         DOCKER_IMAGE = "desmond0905/todo-app"
         DOCKER_CREDENTIALS_ID = "dockerhub-creds"
-        EC2_SSH_CREDENTIALS = "todoapp.pem"
         EC2_IP = "184.72.203.166"
     }
     stages {
