@@ -80,32 +80,25 @@ pipeline {
             }
         }
 
-        stage('Test SSH Connection') {
-            steps {
-                script {
-                    sshagent(credentials: ['todoapp.pem']) {
-                        sh 'ssh -o StrictHostKeyChecking=no ubuntu@${env.EC2_IP} "echo Connection successful!"'
-                    }
-                }
-            }
-        }
-
-
         stage('Deploy to EC2') {
             steps {
                 script {
-                    sshagent(credentials: ['todoapp.pem']) { // Ensure this ID matches the Jenkins credential ID
-                        bat """
-                        ssh -o StrictHostKeyChecking=no ubuntu@${env.EC2_IP} ^ 
-                        "docker pull desmond0905/todo-app && ^ 
-                        docker stop todo-app || true && ^ 
-                        docker rm todo-app || true && ^ 
-                        docker run -d --env-file .env -p 80:3000 --name todo-app desmond0905/todo-app"
+                    echo "Attempting SSH connection to EC2: ${env.EC2_IP}"
+        
+                    sshagent(credentials: ['todoapp.pem']) {
+                        sh """
+                        echo 'SSH connection test'
+                        ssh -v -o StrictHostKeyChecking=no ubuntu@${env.EC2_IP} "
+                            docker pull desmond0905/todo-app && 
+                            docker stop todo-app || true && 
+                            docker rm todo-app || true && 
+                            docker run -d --env-file .env -p 80:3000 --name todo-app desmond0905/todo-app"
                         """
                     }
                 }
             }
         }
+
 
     }
 
