@@ -82,13 +82,13 @@ pipeline {
 
         stage('Deploy to EC2') {
           steps {
-            script {
+            sshagent(credentials: ['todoapp.pem']) {
               bat """
-                ssh -v -i "C:/Users/123de/Downloads/todoapp.pem" -o StrictHostKeyChecking=no ubuntu@${env.EC2_IP} ^
-                  "sudo docker pull ${env.DOCKER_IMAGE}:latest && ^
-                   sudo docker stop todo-app || true && ^
-                   sudo docker rm todo-app || true && ^
-                   sudo docker run -d --env-file .env -p 80:3000 --name todo-app ${env.DOCKER_IMAGE}:latest"
+                ssh -v -o StrictHostKeyChecking=no ubuntu@${env.EC2_IP} ^
+                  "docker pull ${env.DOCKER_IMAGE}:latest && ^
+                   docker stop todo-app || true && ^
+                   docker rm todo-app || true && ^
+                   docker run -d --env-file .env -p 80:3000 --name todo-app ${env.DOCKER_IMAGE}:latest"
               """
             }
           }
