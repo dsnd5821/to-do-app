@@ -109,7 +109,7 @@ pipeline {
         stage('Smoke Test') {
             steps {
                 dir('scripts') {
-                    bat 'npm install node-fetch'
+                    bat 'npm install node-fetch@2'
                     bat 'node smoke_test.js'
                 }
             }
