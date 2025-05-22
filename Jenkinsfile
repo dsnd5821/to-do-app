@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent { label 'linux' }
     environment {
         DOCKER_IMAGE = "desmond0905/todo-app"
         DOCKER_CREDENTIALS_ID = "dockerhub-creds"
