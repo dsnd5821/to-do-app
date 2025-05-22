@@ -88,7 +88,8 @@ pipeline {
               usernameVariable: 'SSH_USER'
             )]) {
             bat """
-              ssh -o StrictHostKeyChecking=no -o StrictModes=no -i "%SSH_KEY%" %SSH_USER%@%EC2_IP% ^
+              icacls "%SSH_KEY%" /inheritance:r /grant:r "%USERNAME%:R" > nul
+              ssh -o StrictHostKeyChecking=no -i "%SSH_KEY%" %SSH_USER%@%EC2_IP% ^
                 "docker pull desmond0905/todo-app:latest && ^
                  docker stop todo-app || exit 0 && ^
                  docker rm todo-app || exit 0 && ^
