@@ -5,7 +5,7 @@ pipeline {
         DOCKER_CREDENTIALS_ID = "dockerhub-creds"
         EC2_IP = "52.207.239.113"
     }
-    // stages {
+    stages {
     //     stage('Clean Workspace') {
     //         steps {
     //             cleanWs()
