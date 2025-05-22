@@ -87,19 +87,18 @@ pipeline {
               keyFileVariable: 'SSH_KEY',
               usernameVariable: 'SSH_USER'
             )]) {
-            bat """
-              rem === Fix file permissions for SSH key ===
-              icacls "%SSH_KEY%" /inheritance:r /remove:g BUILTIN\\Users Everyone > nul
-              icacls "%SSH_KEY%" /grant:r "%COMPUTERNAME%\\%USERNAME%:R" > nul
-            
-              rem === Run remote deployment on EC2 ===
-              ssh -o StrictHostKeyChecking=no -i "%SSH_KEY%" %SSH_USER%@%EC2_IP% ^
-                "docker pull desmond0905/todo-app:latest && ^
-                 docker stop todo-app || true && ^
-                 docker rm todo-app || true && ^
-                 docker run -d --name todo-app -p 80:3000 desmond0905/todo-app:latest && ^
-                 docker ps"
-            """
+              script {
+                def sshCommand = """
+                  ssh -v -o StrictHostKeyChecking=no -i "${SSH_KEY}" ${SSH_USER}@${EC2_IP} '
+                    docker pull desmond0905/todo-app:latest &&
+                    docker stop todo-app || true &&
+                    docker rm todo-app || true &&
+                    docker run -d --name todo-app -p 80:3000 desmond0905/todo-app:latest &&
+                    docker ps
+                  '
+                """
+                bat sshCommand
+              }
             }
           }
         }
