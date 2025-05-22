@@ -87,21 +87,29 @@ pipeline {
               keyFileVariable: 'SSH_KEY',
               usernameVariable: 'SSH_USER'
             )]) {
-              powershell """
-                \$key = '${SSH_KEY}'
-                icacls \$key /inheritance:r /remove:g "BUILTIN\\Users" "Everyone"
-                icacls \$key /grant:r "$env:USERNAME:R"
+              powershell '''
+                $key = "$env:SSH_KEY"
         
-                ssh -v -o StrictHostKeyChecking=no -i "\$key" \$env:SSH_USER@${EC2_IP} `
+                # Remove inherited permissions and group access
+                icacls $key /inheritance:r
+                icacls $key /remove "BUILTIN\\Users" "Everyone"
+        
+                # Grant full access to current Jenkins agent user
+                $whoami = whoami
+                icacls $key /grant:r "$whoami:R"
+        
+                # Run SSH
+                ssh -v -o StrictHostKeyChecking=no -i "$key" $env:SSH_USER@44.202.7.190 `
                   "docker pull desmond0905/todo-app:latest && `
                    docker stop todo-app || true && `
                    docker rm todo-app || true && `
                    docker run -d --name todo-app -p 80:3000 desmond0905/todo-app:latest && `
                    docker ps"
-              """
+              '''
             }
           }
         }
+
 
 
     }
