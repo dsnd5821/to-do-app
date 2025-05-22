@@ -87,13 +87,13 @@ pipeline {
               keyFileVariable: 'SSH_KEY',
               usernameVariable: 'SSH_USER'
             )]) {
-              bat '''
-                ssh -o StrictHostKeyChecking=no -i "%SSH_KEY%" %SSH_USER%@%EC2_IP% ^
-                  "docker pull desmond0905/todo-app:latest && ^
-                  docker stop todo-app || true && ^
-                  docker rm todo-app || true && ^
-                  docker run -d --name todo-app -p 80:3000 desmond0905/todo-app:latest"
-              '''
+            bat """
+              ssh -o StrictHostKeyChecking=no -o StrictModes=no -i "%SSH_KEY%" %SSH_USER%@%EC2_IP% ^
+                "docker pull desmond0905/todo-app:latest && ^
+                 docker stop todo-app || exit 0 && ^
+                 docker rm todo-app || exit 0 && ^
+                 docker run -d --name todo-app -p 80:3000 desmond0905/todo-app:latest"
+            """
             }
           }
         }
