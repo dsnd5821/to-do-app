@@ -108,7 +108,7 @@ pipeline {
                   "docker pull desmond0905/todo-app:latest && `
                    docker stop todo-app || true && `
                    docker rm todo-app || true && `
-                   docker run -d --name todo-app -p 80:3000 desmond0905/todo-app:latest && `
+                   docker run -d --name todo-app --network todo-net --env-file .env -p 80:3000 desmond0905/todo-app:latest && `
                    docker ps"
               '''
             }
