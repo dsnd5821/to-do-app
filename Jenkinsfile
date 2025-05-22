@@ -82,18 +82,20 @@ pipeline {
     //
         stage('Deploy to EC2') {
           steps {
-              script {
-                sshagent(['todoapp.pem']) {
-                  bat """
-                    ssh -v -o StrictHostKeyChecking=no ubuntu@${env.EC2_IP} ^
-                      "docker pull ${env.DOCKER_IMAGE}:latest && ^
-                       docker stop todo-app || true && ^
-                       docker rm todo-app || true && ^
-                       docker run -d --env-file .env -p 80:3000 --name todo-app ${env.DOCKER_IMAGE}:latest"
-                  """
-                }
-              }
-            
+            withCredentials([sshUserPrivateKey(
+              credentialsId: 'todoapp.pem',
+              keyFileVariable: 'SSH_KEY',
+              usernameVariable: 'SSH_USER'
+            )]) {
+              sh '''
+                ssh -o StrictHostKeyChecking=no -i $SSH_KEY $SSH_USER@${EC2_IP} "
+                  docker pull myrepo/todo-app:latest &&
+                  docker stop todo-app || true &&
+                  docker rm todo-app || true &&
+                  docker run -d --name todo-app -p 80:3000 myrepo/todo-app:latest
+                "
+              '''
+            }
           }
         }
 
