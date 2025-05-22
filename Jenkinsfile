@@ -90,16 +90,18 @@ pipeline {
               powershell '''
                 $key = "$env:SSH_KEY"
         
-                # Fix key permissions
+                # Remove inheritance and insecure permissions
                 icacls $key /inheritance:r | Out-Null
                 icacls $key /remove "BUILTIN\\Users" "Everyone" | Out-Null
-                $user = whoami
-                icacls $key /grant "$user:R" | Out-Null
         
-                # Confirm for debugging (optional)
-                echo "Attempting SSH to $env:SSH_USER@$env:EC2_IP"
+                # Grant read to SYSTEM account and Jenkins user (safe default)
+                icacls $key /grant *S-1-5-18:R | Out-Null   # SYSTEM
+                icacls $key /grant "Users:R" | Out-Null     # fallback
         
-                # Deploy
+                # Optional: Output permissions for confirmation
+                icacls $key
+        
+                # Deploy via SSH
                 ssh -v -o StrictHostKeyChecking=no -i "$key" $env:SSH_USER@$env:EC2_IP `
                   "docker pull desmond0905/todo-app:latest && `
                    docker stop todo-app || true && `
@@ -110,6 +112,7 @@ pipeline {
             }
           }
         }
+
 
     }
 
