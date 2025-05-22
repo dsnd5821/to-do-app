@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'linux' }
+    agent any
     environment {
         DOCKER_IMAGE = "desmond0905/todo-app"
         DOCKER_CREDENTIALS_ID = "dockerhub-creds"
@@ -87,7 +87,7 @@ pipeline {
               keyFileVariable: 'SSH_KEY',
               usernameVariable: 'SSH_USER'
             )]) {
-              sh '''
+              bat '''
                 ssh -o StrictHostKeyChecking=no -i $SSH_KEY $SSH_USER@${EC2_IP} "
                   docker pull myrepo/todo-app:latest &&
                   docker stop todo-app || true &&
