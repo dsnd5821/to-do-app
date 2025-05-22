@@ -87,21 +87,22 @@ pipeline {
               keyFileVariable: 'SSH_KEY',
               usernameVariable: 'SSH_USER'
             )]) {
-              script {
-                def sshCommand = """
-                  ssh -v -o StrictHostKeyChecking=no -i "${SSH_KEY}" ${SSH_USER}@${EC2_IP} '
-                    docker pull desmond0905/todo-app:latest &&
-                    docker stop todo-app || true &&
-                    docker rm todo-app || true &&
-                    docker run -d --name todo-app -p 80:3000 desmond0905/todo-app:latest &&
-                    docker ps
-                  '
-                """
-                bat sshCommand
-              }
+              powershell """
+                \$key = '${SSH_KEY}'
+                icacls \$key /inheritance:r /remove:g "BUILTIN\\Users" "Everyone"
+                icacls \$key /grant:r "$env:USERNAME:R"
+        
+                ssh -v -o StrictHostKeyChecking=no -i "\$key" \$env:SSH_USER@${EC2_IP} `
+                  "docker pull desmond0905/todo-app:latest && `
+                   docker stop todo-app || true && `
+                   docker rm todo-app || true && `
+                   docker run -d --name todo-app -p 80:3000 desmond0905/todo-app:latest && `
+                   docker ps"
+              """
             }
           }
         }
+
 
     }
 
