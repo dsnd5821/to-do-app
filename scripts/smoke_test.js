@@ -2,7 +2,7 @@ const fetch = require('node-fetch');
 
 (async () => {
   try {
-    const baseURL = 'http://44.202.7.190/api/todos';
+    const baseURL = 'http://3.228.191.88/api/todos';
 
     // Test GET
     const res = await fetch(baseURL);

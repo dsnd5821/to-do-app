@@ -3,8 +3,8 @@ pipeline {
     environment {
         DOCKER_IMAGE = "desmond0905/todo-app"
         DOCKER_CREDENTIALS_ID = "dockerhub-creds"
-        Test_EC2_IP = "44.202.7.190"
-        Prod_EC2_IP = "3.95.154.56"
+        Test_EC2_IP = "3.228.191.88"
+        Prod_EC2_IP = "54.227.199.143"
     }
     stages {
         stage('Clean Workspace') {
