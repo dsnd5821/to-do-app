@@ -79,7 +79,7 @@ pipeline {
     //             bat 'docker compose -f docker-compose.yml up -d'
     //         }
     //     }
-
+    //
         stage('Deploy to EC2') {
           steps {
               script {
