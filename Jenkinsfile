@@ -96,11 +96,11 @@ pipeline {
         
                 # Proceed with SSH
                 ssh -v -o StrictHostKeyChecking=no -i "$key" $env:SSH_USER@$env:Test_EC2_IP `
-                  "docker pull desmond0905/todo-app:latest && `
-                   docker stop todo-app || true && `
-                   docker rm todo-app || true && `
-                   docker run -d --name todo-app --network todo-net --env-file .env -p 80:3000 desmond0905/todo-app:latest && `
-                   docker ps"
+                  "sudo docker pull desmond0905/todo-app:latest && `
+                   sudo docker stop todo-app || true && `
+                   sudo docker rm todo-app || true && `
+                   sudo docker run -d --name todo-app --network todo-net --env-file .env -p 80:3000 desmond0905/todo-app:latest && `
+                   sudo docker ps"
               '''
             }
           }
@@ -140,11 +140,11 @@ pipeline {
         
                 # Proceed with SSH
                 ssh -v -o StrictHostKeyChecking=no -i "$key" $env:SSH_USER@$env:Prod_EC2_IP `
-                  "docker pull desmond0905/todo-app:latest && `
-                   docker stop todo-app || true && `
-                   docker rm todo-app || true && `
-                   docker run -d --name todo-app --network todo-net --env-file .env -p 80:3000 desmond0905/todo-app:latest && `
-                   docker ps"
+                  "sudo docker pull desmond0905/todo-app:latest && `
+                   sudo docker stop todo-app || true && `
+                   sudo docker rm todo-app || true && `
+                   sudo docker run -d --name todo-app --network todo-net --env-file .env -p 80:3000 desmond0905/todo-app:latest && `
+                   sudo docker ps"
               '''
             }
           }
