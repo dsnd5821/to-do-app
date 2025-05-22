@@ -80,7 +80,7 @@ pipeline {
     //         }
     //     }
     //
-        stage('Deploy to EC2') {
+        stage('Deploy to EC2 Test Server') {
           steps {
             withCredentials([sshUserPrivateKey(
               credentialsId: 'todoapp.pem',
