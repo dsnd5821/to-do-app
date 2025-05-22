@@ -3,7 +3,7 @@ pipeline {
     environment {
         DOCKER_IMAGE = "desmond0905/todo-app"
         DOCKER_CREDENTIALS_ID = "dockerhub-creds"
-        EC2_IP = "184.72.203.166"
+        EC2_IP = "52.207.239.113"
     }
     stages {
         stage('Clean Workspace') {
@@ -82,15 +82,18 @@ pipeline {
 
         stage('Deploy to EC2') {
           steps {
-            sshagent(credentials: ['todoapp.pem']) {
-              bat """
-                ssh -v -o StrictHostKeyChecking=no ubuntu@${env.EC2_IP} ^
-                  "docker pull ${env.DOCKER_IMAGE}:latest && ^
-                   docker stop todo-app || true && ^
-                   docker rm todo-app || true && ^
-                   docker run -d --env-file .env -p 80:3000 --name todo-app ${env.DOCKER_IMAGE}:latest"
-              """
-            }
+              script {
+                sshagent(['ec2']) {
+                  bat """
+                    ssh -v -o StrictHostKeyChecking=no ubuntu@${env.EC2_IP} ^
+                      "docker pull ${env.DOCKER_IMAGE}:latest && ^
+                       docker stop todo-app || true && ^
+                       docker rm todo-app || true && ^
+                       docker run -d --env-file .env -p 80:3000 --name todo-app ${env.DOCKER_IMAGE}:latest"
+                  """
+                }
+              }
+            
           }
         }
 
